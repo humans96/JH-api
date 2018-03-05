@@ -18,7 +18,7 @@ const handler = {
   },
 
   [PING_MASTER]() {
-    console.log(`process #${process.pid} has pipe to master`);
+    // console.log(`process #${process.pid} has pipe to master`);
   },
   [SCANED_QRCODE_CALLBACK](io, { userId }) {
     global.io.sockets.to(userId).emit('scaned_qrcode_callback');
