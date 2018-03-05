@@ -4,7 +4,8 @@ Promise.promisifyAll(require('fs'));
 global.config = require('./config');
 
 const cluster = require('cluster');
-const { WORKER_NUM, TOKEN_REFRESH_INTERVAL } = global.config;
+const { WORKER_NUM } = global.config;
+
 
 const {
   SET_ACCESS_TOKEN,
