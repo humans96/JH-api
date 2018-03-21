@@ -8,6 +8,6 @@ const router = new KoaRouter();
 router.get('/user_Infos', require('./api').user.infos);
 
 
-router.use('/JZ-api', router.routes());
+router.use('/JH-api', router.routes());
 
 module.exports = router;

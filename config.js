@@ -6,30 +6,30 @@ module.exports = {
   LOAD_OLD_TOKEN: true, // make sure open in dev mode
   WORKER_NUM: require('os').cpus().length,
   // ucenter database [postgres]
-  db: {
-    ucenter: {
-      dialect: 'postgres',
-      host: '192.168.1.5',
-      port: 5432,
-      database: 'ms',
-      user: 'ms',
-      password: 'spiderdt',
-      idleTimeoutMillis: 30000,
-      connectionTimeoutMillis: 2000,
-      max: 20
-    },
-    dw: {
-      dialect: 'postgres',
-      host: '192.168.1.5',
-      port: 5432,
-      database: 'dw',
-      user: 'ms',
-      password: 'spiderdt',
-      idleTimeoutMillis: 30000,
-      connectionTimeoutMillis: 2000,
-      max: 20
-    }
-  },
+  // db: {
+  //   ucenter: {
+  //     dialect: 'postgres',
+  //     host: '192.168.1.5',
+  //     port: 5432,
+  //     database: 'ms',
+  //     user: 'ms',
+  //     password: 'spiderdt',
+  //     idleTimeoutMillis: 30000,
+  //     connectionTimeoutMillis: 2000,
+  //     max: 20
+  //   },
+  //   dw: {
+  //     dialect: 'postgres',
+  //     host: '192.168.1.5',
+  //     port: 5432,
+  //     database: 'dw',
+  //     user: 'ms',
+  //     password: 'spiderdt',
+  //     idleTimeoutMillis: 30000,
+  //     connectionTimeoutMillis: 2000,
+  //     max: 20
+  //   }
+  // },
   redis: {
     host: '127.0.0.1',
     port: 6379

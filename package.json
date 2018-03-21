@@ -1,5 +1,5 @@
 {
-  "name": "JZ-api",
+  "name": "JH-api",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Human-sq/JZ-api.git"
+    "url": "git+https://github.com/Human-sq/JH-api.git"
   },
   "keywords": [
     "shop"
@@ -17,9 +17,9 @@
   "author": "胡猛",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Human-sq/JZ-api/issues"
+    "url": "https://github.com/Human-sq/JH-api/issues"
   },
-  "homepage": "https://github.com/Human-sq/JZ-api#readme",
+  "homepage": "https://github.com/Human-sq/JH-api#readme",
   "dependencies": {
     "bluebird": "^3.5.1",
     "cross-env": "^5.1.3",
