@@ -3,11 +3,13 @@
 // const material = require('./material');
 
 const user = require('./user');
+const product = require('./product');
 // const tag = require('./tag');
 
 module.exports = {
 //   check_server,
 //   material,
-  user
+  user,
+  product
 //   tag
 };
