@@ -20,6 +20,9 @@ router.post('/editAddress', koaBody(), require('./api').user.editAddress);
 router.get('/getAddress', koaBody(), require('./api').user.getAddress);
 
 router.get('/product', koaBody(), require('./api').product.detail);
+router.get('/allProduct', koaBody(), require('./api').product.allProduct);
+router.post('/editProduct', koaBody(), require('./api').product.editProduct);
+router.post('/addProduct', koaBody(), require('./api').product.addProduct);
 router.get('/productList', koaBody(), require('./api').product.productList);
 router.get('/order', koaBody(), require('./api').product.order);
 router.get('/cart', koaBody(), require('./api').product.cart);

@@ -20,6 +20,41 @@ const productList = async (ctx, next) => {
   }
 }
 
+const allProduct = async (ctx, next) => {
+  try {
+    let data = await sqlQuery('SELECT * FROM `product` ORDER BY id DESC');
+    ctx.body = success({
+      data
+    });
+  } catch (e) {
+    ctx.body = server_error(e);
+  }
+}
+
+const editProduct = async (ctx, next) => {
+  try {
+    let sq = ctx.request.body;
+    let data = await sqlInsert('UPDATE `product` SET name = ?,image = ?, price = ?, stock = ?, switch = ?, detail = ?, function = ? , packing =?  WHERE id = ?',[sq.name, sq.image, sq.price, sq.stock, JSON.stringify(sq.switch), JSON.stringify(sq.detail), JSON.stringify(sq.function), JSON.stringify(sq.packing), sq.id]);
+    ctx.body = success({
+      data
+    });
+  } catch (e) {
+    ctx.body = server_error(e);
+  }
+}
+
+const addProduct = async (ctx, next) => {
+  try {
+    let sq = ctx.request.body;
+    let data = await sqlInsert('INSERT INTO `product` SET name = ?,image = ?, price = ?, stock = ?, switch = ?, detail = ?, function = ? , packing =?',[sq.name, sq.image, sq.price, sq.stock, JSON.stringify(sq.switch), JSON.stringify(sq.detail), JSON.stringify(sq.function), JSON.stringify(sq.packing)]);
+    ctx.body = success({
+      data
+    });
+  } catch (e) {
+    ctx.body = server_error(e);
+  }
+}
+
 const detail = async (ctx, next) => {
   try {
     let sq = formate(ctx.request.url);
@@ -35,8 +70,7 @@ const detail = async (ctx, next) => {
 
 const order = async (ctx, next) => {
   try {
-    let sq = formate(ctx.request.url);
-    let data = await sqlQuery('SELECT * FROM `orderinfo` WHERE' + sq);
+    let data = await sqlQuery('SELECT * FROM `order`');
     ctx.body = success({
       data
     });
@@ -121,6 +155,9 @@ const cancelOrder = async (ctx, next) => {
 
 module.exports = {
   productList,
+  addProduct,
+  editProduct,
+  allProduct,
   detail,
   order,
   getOrderInfo,
