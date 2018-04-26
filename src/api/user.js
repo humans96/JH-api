@@ -13,7 +13,6 @@ const check = async (ctx, next) => {
   try {
     let sq = formate(ctx.request.url);    
     let data = await sqlQuery('SELECT * FROM `user` WHERE '+ sq);
-    console.log('SELECT * FROM `user` WHERE '+ sq);
     ctx.body = success({
       data:data[0]
     });
@@ -68,7 +67,6 @@ const getUserInfo = async (ctx, next) => {
   try {
     let sq = formate(ctx.request.url);
     let data = await sqlQuery('SELECT id  FROM `cart` WHERE' + sq);
-    console.log(data.length);
     ctx.body = success({
       num:data.length
     });
@@ -81,7 +79,6 @@ const getCartNum = async (ctx, next) => {
   try {
     let sq = formate(ctx.request.url);
     let data = await sqlQuery('SELECT id  FROM `cart` WHERE' + sq);
-    console.log(data.length);
     ctx.body = success({
       num:data.length
     });
@@ -94,7 +91,6 @@ const getOrderNum = async (ctx, next) => {
   try {
     let sq = formate(ctx.request.url);
     let data = await sqlQuery('SELECT status  FROM `order` WHERE' + sq);
-    // console.log(data);
     ctx.body = success({
       data
     });
@@ -117,11 +113,9 @@ const getAddress = async (ctx, next) => {
 
 const addAddress = async(ctx, next) =>{
   try {
-    const req = ctx.request.body;   
-    
-    console.log(req);
+    let req = ctx.request.body;
     let address = await sqlQuery('SELECT `address`  FROM `user` WHERE `name` = ' + '"' +req.name +'"');
-    if(address[0].address == ''){
+    if(!address[0].address){
       address = [req.address];
     }
     else{
@@ -134,7 +128,43 @@ const addAddress = async(ctx, next) =>{
       data
     );
   } catch (e) {
-    console.log(e);
+    ctx.body = server_error(e);
+  }
+}
+
+const editAddress = async(ctx, next) =>{
+  try {
+    let req = ctx.request.body;
+    let address = await sqlQuery('SELECT `address`  FROM `user` WHERE `name` = ' + '"' +req.name +'"');
+    address = eval(address[0].address);
+    let ressss = address.filter(item =>{
+      return JSON.stringify(item) != JSON.stringify(req.old)
+    })
+    ressss.push(req.new);    
+    ressss = JSON.stringify(ressss);
+    let data = await sqlInsert('UPDATE `user` SET address = ?  WHERE name = ?',[ressss, req.name ]); 
+    ctx.body = success(
+      data
+    );
+  } catch (e) {
+    ctx.body = server_error(e);
+  }
+}
+
+const deleteAddress = async(ctx, next) =>{
+  try {
+    let req = ctx.request.body;
+    let address = await sqlQuery('SELECT `address`  FROM `user` WHERE `name` = ' + '"' +req.name +'"');
+    address = eval(address[0].address);
+    let ressss = address.filter(item =>{
+      return JSON.stringify(item) != JSON.stringify(req.address)
+    })
+    ressss = JSON.stringify(ressss);
+    let data = await sqlInsert('UPDATE `user` SET address = ?  WHERE name = ?',[ressss, req.name ]); 
+    ctx.body = success(
+      data
+    );
+  } catch (e) {
     ctx.body = server_error(e);
   }
 }
@@ -146,5 +176,7 @@ module.exports = {
   getAddress,
   addAddress,
   getCartNum,
-  getOrderNum
+  getOrderNum,
+  editAddress,
+  deleteAddress
 };
