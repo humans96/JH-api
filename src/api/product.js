@@ -153,6 +153,32 @@ const cancelOrder = async (ctx, next) => {
   }
 }
 
+const agreeOrder = async (ctx, next) => {
+  try {
+    let req = ctx.request.body;
+    let data1 = await sqlInsert('UPDATE `product` SET stock = ? WHERE id = ?',[req.num, req.pid]); 
+    let data2 = await sqlInsert('UPDATE `order` SET status = ? WHERE id = ?',['Receiving', req.id]); 
+    let data3 = await sqlInsert('UPDATE `order` SET orderID = ? WHERE id = ?',[req.oid, req.id]); 
+    ctx.body = success(
+      data1
+    );
+  } catch (e) {
+    ctx.body = server_error(e);
+  }
+}
+
+const refuseOrder = async (ctx, next) => {
+  try {
+    let req = ctx.request.body;
+    let data = await sqlInsert('UPDATE `order` SET status = ?, manage=?  WHERE id = ?',["Closed", req.manage, req.id ]); 
+    ctx.body = success(
+      data
+    );
+  } catch (e) {
+    ctx.body = server_error(e);
+  }
+}
+
 module.exports = {
   productList,
   addProduct,
@@ -165,5 +191,7 @@ module.exports = {
   cartDelete,
   addCart,
   placeOrder,
-  cancelOrder
+  cancelOrder,
+  agreeOrder,
+  refuseOrder
 };

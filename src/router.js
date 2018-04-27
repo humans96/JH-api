@@ -31,6 +31,8 @@ router.get('/cartDelete', koaBody(), require('./api').product.cartDelete);
 
 router.post('/placeOrder', koaBody(), require('./api').product.placeOrder);
 router.get('/cancelOrder', koaBody(), require('./api').product.cancelOrder);
+router.post('/agreeOrder', koaBody(), require('./api').product.agreeOrder);
+router.post('/refuseOrder', koaBody(), require('./api').product.refuseOrder);
 
 router.use('/JH-api', router.routes());
 
