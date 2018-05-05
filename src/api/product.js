@@ -55,6 +55,19 @@ const addProduct = async (ctx, next) => {
   }
 }
 
+
+const deleteProduct = async (ctx, next) => {
+  try {
+    let sq = formate(ctx.request.url);
+    let data = await sqlQuery('DELETE FROM `product` WHERE' + sq);
+    ctx.body = success({
+      data
+    });
+  } catch (e) {
+    ctx.body = server_error(e);
+  }
+}
+
 const detail = async (ctx, next) => {
   try {
     let sq = formate(ctx.request.url);
@@ -90,6 +103,7 @@ const getOrderInfo = async (ctx, next) => {
     ctx.body = server_error(e);
   }
 }
+
 
 const cart = async (ctx, next) => {
   try {
@@ -156,12 +170,43 @@ const cancelOrder = async (ctx, next) => {
 const agreeOrder = async (ctx, next) => {
   try {
     let req = ctx.request.body;
-    let data1 = await sqlInsert('UPDATE `product` SET stock = ? WHERE id = ?',[req.num, req.pid]); 
-    let data2 = await sqlInsert('UPDATE `order` SET status = ? WHERE id = ?',['Receiving', req.id]); 
-    let data3 = await sqlInsert('UPDATE `order` SET orderID = ? WHERE id = ?',[req.oid, req.id]); 
-    ctx.body = success(
-      data1
-    );
+    let prod = await sqlInsert('SELECT `stock` FROM `product` WHERE name = ?',[req.pname]); 
+    prod[0].stock -=req.num;
+    if(prod[0].stock < 0){
+      ctx.body = success(
+       { errorMessage:'库存无货'}
+      );
+    }
+    else {
+      let data1 = await sqlInsert('UPDATE `product` SET stock = ? WHERE name = ?',[prod[0].stock, req.pname]); 
+      let data2 = await sqlInsert('UPDATE `order` SET status = ?, orderID = ? WHERE id = ?',['Receiving',req.oid, req.id]); 
+      ctx.body = success(
+        data1
+      );
+    }
+  } catch (e) {
+    ctx.body = server_error(e);
+  }
+}
+
+const agreeOrderError = async (ctx, next) => {
+  try {
+    let req = ctx.request.body;
+    let prod = await sqlInsert('SELECT `stock` FROM `product` WHERE name = ?',[req.pname]); 
+    prod[0].stock -=req.num;
+    if(prod[0].stock < 0){
+      let data1 = await sqlInsert('UPDATE `product` SET stock = ? WHERE name = ?',[prod[0].stock + req.num, req.pname]); 
+      ctx.body = success(
+       {message:'ok'}
+      );
+    }
+    else {
+      let data1 = await sqlInsert('UPDATE `product` SET stock = ? WHERE name = ?',[prod[0].stock + 2*req.num, req.pname]); 
+      let data2 = await sqlInsert('UPDATE `order` SET status = ?, orderID = ? WHERE id = ?',['Auditing',req.oid, req.id]); 
+      ctx.body = success(
+        data1
+      );
+    }
   } catch (e) {
     ctx.body = server_error(e);
   }
@@ -183,6 +228,7 @@ module.exports = {
   productList,
   addProduct,
   editProduct,
+  deleteProduct,
   allProduct,
   detail,
   order,
@@ -193,5 +239,6 @@ module.exports = {
   placeOrder,
   cancelOrder,
   agreeOrder,
+  agreeOrderError,
   refuseOrder
 };

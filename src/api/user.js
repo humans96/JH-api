@@ -54,10 +54,31 @@ const login = async (ctx, next) => {
 const register = async(ctx, next) =>{
   try {
     const req = ctx.request.body;   
-    ctx.response.body = success({
-      req
-    });
     let data = await sqlInsert('INSERT INTO user SET ?',req); 
+    ctx.response.body = success({
+      data
+    });
+  } catch (e) {
+    ctx.body = server_error(e);
+  }
+}
+
+const updatePwd = async(ctx, next) =>{
+  try {
+    const req = ctx.request.body;   
+    let checkpwd = await sqlInsert('SELECT * FROM `user` WHERE name = ? ',[req.name]); 
+    if(checkpwd[0].password == req.oldpwd){
+      let data = await sqlInsert('UPDATE `user` SET password = ?  WHERE name = ?',[req.newpwd,req.name]);
+      ctx.response.body = success({
+        data
+      });
+    }
+    else {
+      ctx.response.body = success({
+        message:'旧密码输入错误'
+      });
+    }
+    
   } catch (e) {
     ctx.body = server_error(e);
   }
@@ -69,6 +90,41 @@ const getUserInfo = async (ctx, next) => {
     let data = await sqlQuery('SELECT id  FROM `cart` WHERE' + sq);
     ctx.body = success({
       num:data.length
+    });
+  } catch (e) {
+    ctx.body = server_error(e);
+  }
+}
+
+const editUser = async (ctx, next) => {
+  try {
+    let sq = ctx.request.body;
+    let data = await sqlInsert('UPDATE `user` SET name = ?, password = ?, phone=?, email = ? WHERE id = ?',[sq.name,sq.password,sq.phone,sq.email,sq.id]);
+    ctx.body = success({
+      data
+    });
+  } catch (e) {
+    ctx.body = server_error(e);
+  }
+}
+
+const deleteUser = async (ctx, next) => {
+  try {
+    let sq = formate(ctx.request.url);
+    let data = await sqlQuery('DELETE FROM `user` WHERE' + sq);
+    ctx.body = success({
+      data
+    });
+  } catch (e) {
+    ctx.body = server_error(e);
+  }
+}
+
+const allUser = async (ctx, next) => {
+  try {
+    let data = await sqlQuery('SELECT *  FROM `user`');
+    ctx.body = success({
+      data
     });
   } catch (e) {
     ctx.body = server_error(e);
@@ -173,6 +229,10 @@ module.exports = {
   check,
   login,
   register,
+  updatePwd,
+  allUser,
+  deleteUser,
+  editUser,
   getAddress,
   addAddress,
   getCartNum,
