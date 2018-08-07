@@ -7,9 +7,9 @@ const product = require('./product');
 // const tag = require('./tag');
 
 module.exports = {
-//   check_server,
-//   material,
+  //   check_server,
+  //   material,
   user,
   product
-//   tag
+  //   tag
 };
